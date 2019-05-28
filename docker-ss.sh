@@ -33,8 +33,8 @@ get_config() {
 	read -p "Chose your passwd: " passwd
 	read -p "chose your port: " port
 
-	cat > docker-compose.yaml <<EOF
-	shadowsocks:
+	cat > docker-compose.yaml <<-EOF
+shadowsocks:
   image: shadowsocks/shadowsocks-libev
   ports:
     - "$port:8388"
@@ -47,21 +47,32 @@ EOF
 }
 
 main() {
-	mkdir $current_dir/docker/ss-libev && \
+	mkdir -p $current_dir/docker/ss-libev && \
 	cd $current_dir/docker/ss-libev/
-	$status=install_docker
-	if [ $status -eq 0 ]; then
+	install_docker
+	if [ $? -eq 0 ]; then
 		get_config
 		if [ $? -eq 0 ]; then
 			# Docker services start and install ss-libev for docker
 			docker-compose up -d
+
+			clear
+			echo "--------------------------"
+			echo "----docker-ss installed---"
+			echo "Port: $port"
+			echo "Method: aes-256-gcm"
+			echo "Password: $passwd"
 			echo "Enjoy it"
+			echo "--------------------------"
+
 		fi
 	else
 		echo "Warning: ss-libev unsuccessful installation"
 		exit 1
 	fi
 
+
 }
 
 main
+
