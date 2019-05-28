@@ -8,20 +8,20 @@ current_dir=$(pwd)
 
 # install docker on vps
 install_docker() {
-	apt-get update && \
+	apt-get update -y && \
 	apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg-agent \
-    software-properties-common  && \
+    software-properties-common -y && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -  && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository \
    		"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    		$(lsb_release -cs) \
    		stable"  && \
-   	apt-get update && \
+   	apt-get update -y && \
    	apt-get install docker-ce docker-ce-cli containerd.io docker-compose -y && \
 
    	return 0
