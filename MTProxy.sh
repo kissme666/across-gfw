@@ -35,6 +35,7 @@ EOF
 main() {
     # Install dependence and make it
     clear
+    apt update -y && \
     apt install git curl build-essential libssl-dev zlib1g-dev -y && \
     git clone https://github.com/TelegramMessenger/MTProxy && \
     cd $current_dir/MTProxy || exit 1 && \
