@@ -5,6 +5,10 @@
 # OS: Ubuntu18.04 / Debian 9.x
 # Version: 0.1
 # 
+
+# debug
+set -x 
+
 current_dir=$(pwd)
 
 get_config() {
@@ -40,8 +44,8 @@ main() {
     git clone https://github.com/TelegramMessenger/MTProxy && \
     cd $current_dir/MTProxy || exit 1 && \
     make && \
-    cd $current_dir/MTProxy/objs/bin || echo "Dir not found" && exit 1 && \
-    makir -p /usr/local/MTProxy/ && \
+    cd $current_dir/MTProxy/objs/bin && \
+    mkdir -p /usr/local/MTProxy/ && \
     cp ./mtproto-proxy /usr/local/MTProxy/ && \
 	cd /usr/local/MTProxy/ && \
 	curl -s https://core.telegram.org/getProxySecret -o proxy-secret && \
