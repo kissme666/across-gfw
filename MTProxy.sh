@@ -42,7 +42,7 @@ main() {
     make && \
     cd $current_dir/MTProxy/objs/bin || echo "Dir not found" && exit 1 && \
     makir -p /usr/local/MTProxy/ && \
-    cp $current_dir/mtproto-proxy /usr/local/MTProxy/ && \
+    cp ./mtproto-proxy /usr/local/MTProxy/ && \
 	cd /usr/local/MTProxy/ && \
 	curl -s https://core.telegram.org/getProxySecret -o proxy-secret && \
 	curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
