@@ -40,7 +40,7 @@ main() {
     git clone https://github.com/TelegramMessenger/MTProxy && \
     cd $current_dir/MTProxy || exit 1 && \
     make && \
-    cd $current_dir/objs/bin || echo "Dir not found" && exit 1 && \
+    cd $current_dir/MTProxy/objs/bin || echo "Dir not found" && exit 1 && \
     makir -p /usr/local/MTProxy/ && \
     cp $current_dir/mtproto-proxy /usr/local/MTProxy/ && \
 	cd /usr/local/MTProxy/ && \
