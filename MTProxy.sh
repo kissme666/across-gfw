@@ -14,7 +14,7 @@ current_dir=$(pwd)
 
 # 获取ip地址
 get_ip() {
-	local ipaddr=$(curl ipconfig.me)
+	local ipaddr=$(curl ifconfig.me)
 
 	echo "$ipaddr"
 }
@@ -59,6 +59,13 @@ print_info() {
 		return 0
 }
 
+# 删除安装过程中产生的文件
+clean() {
+	rm -rf $HOME/MTProxy
+
+	return 0
+
+}
 # 下载编译安装
 install_mtproxy() {
     # Install dependence and make it
@@ -83,7 +90,8 @@ install_mtproxy() {
 main() {
 	install_mtproxy \
 	&& get_config \
-	&& print_info
+	&& print_info \
+	&& clean
 
 }
 
