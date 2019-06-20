@@ -3,7 +3,7 @@
 # Date: 2019-6-1
 # Auto install MTProxy shell scripts
 # OS: Ubuntu18.04 / Debian 9.x
-# Version: 0.1
+# Version: 0.2
 # 
 
 # debug
