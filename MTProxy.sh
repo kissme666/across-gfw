@@ -9,12 +9,21 @@
 # debug
 set -x 
 
+
 current_dir=$(pwd)
 
+# 获取ip地址
+get_ip() {
+	local ipaddr=$(curl ipconfig.me)
+
+	echo "$ipaddr"
+}
+
+# 配置端口密码
 get_config() {
     random_port=$(shuf -i 30000-65535 -n 1)
     secret=$(head -c 16 /dev/urandom | xxd -ps)
-    echo -e "Passwd: $secret\nport: $random_port" > config.txt
+    
     cat > /etc/systemd/system/MTProxy.service <<-EOF
 [Unit]
 Description=MTProxy
@@ -33,33 +42,48 @@ EOF
 	systemctl enable MTProxy.service
 	systemctl restart MTProxy.service
 
+	echo "Usage: tg://proxy?server=$(get_ip)&port=${random_port}&secret=${secret}" | tee $HOME/mtproxy.txt
 }
 
 
-main() {
+# 输出安装后的信息
+print_info() {
+		clear
+		echo 
+		echo -e " MTProxy IS INSTALLED               				  "
+		echo -e " Your password and port in $HOME/mtproxy.txt		  "
+		echo -e " $(cat $HOME/mtproxy.txt )              			  "
+		echo 
+		echo 
+
+		return 0
+}
+
+# 下载编译安装
+install_mtproxy() {
     # Install dependence and make it
     clear
-    apt update -y && \
-    apt install git curl build-essential libssl-dev zlib1g-dev -y && \
-    git clone https://github.com/TelegramMessenger/MTProxy && \
-    cd $current_dir/MTProxy || exit 1 && \
-    make && \
-    cd $current_dir/MTProxy/objs/bin && \
-    mkdir -p /usr/local/MTProxy/ && \
-    cp ./mtproto-proxy /usr/local/MTProxy/ && \
-	cd /usr/local/MTProxy/ && \
-	curl -s https://core.telegram.org/getProxySecret -o proxy-secret && \
-	curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
-	 
-	if [ $? -eq 0 ]; then
-		get_config
-		clear
-		echo "---------Attention---------------"
-		echo "Your password and port in config.txt"
-		echo "Usage: tg://proxy?server=YOUR_SERVER_IP&port=PORT&secret=password"
-		echo 
-		echo "----------------------------------"
-	fi
+    apt update \
+    && apt install -y git curl build-essential libssl-dev zlib1g-dev \
+	&& git clone https://github.com/TelegramMessenger/MTProxy \
+    && cd $current_dir/MTProxy || exit 1 \
+    && make \
+    && cd $current_dir/MTProxy/objs/bin || exit 1 \
+    && mkdir -p /usr/local/MTProxy/ \
+    && cp ./mtproto-proxy /usr/local/MTProxy/ \
+	&& cd /usr/local/MTProxy/ \
+	&& curl -s https://core.telegram.org/getProxySecret -o proxy-secret \
+	&& curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
+
+	return 0
+}
+
+
+# 入口程序
+main() {
+	install_mtproxy \
+	&& get_config \
+	&& print_info
 
 }
 
