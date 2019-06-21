@@ -102,7 +102,7 @@ install_mtproxy() {
 }
 
 # 卸载mtproxy 这里应该检查是否安装mrpoxy，尚未实现
-uninstall_mrproxy() {
+uninstall_mtproxy() {
 	systemctl stop MTProxy.service &>/dev/null \
 	&& systemctl disable MTProxy.service &> /dev/null
 	rm -rf /usr/local/MTProxy
