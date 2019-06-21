@@ -117,7 +117,7 @@ action=$1
 [ -z $1 ] && action='install'
 case "$action" in
 	install|uninstall)
-		$action_mtproxy
+		${action}_mtproxy
 		;;
 	*)
 		echo "Arguements error! [${action}]"
