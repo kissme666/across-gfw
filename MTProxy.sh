@@ -105,7 +105,8 @@ install_mtproxy() {
 uninstall_mtproxy() {
 	systemctl stop MTProxy.service &>/dev/null \
 	&& systemctl disable MTProxy.service &> /dev/null
-	rm -rf /usr/local/MTProxy
+	rm -rf /usr/local/MTProxy 
+	rm -f /etc/systemd/system/MTProxy.service
 	rm -f $HOME/mtproxy.txt
 	echo "Uninstall mtproxy successfuly."
 }
