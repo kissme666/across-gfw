@@ -23,8 +23,14 @@ get_ip() {
 get_config() {
     random_port=$(shuf -i 30000-65535 -n 1)
     secret=$(head -c 16 /dev/urandom | xxd -ps)
-    
-    cat > /etc/systemd/system/MTProxy.service <<-EOF
+
+    echo "Usage: tg://proxy?server=$(get_ip)&port=${random_port}&secret=${secret}" > $HOME/mtproxy.txt
+}
+
+
+# 设置mtproxy为系统开启启动服务
+enable_mtproxy() {
+	    cat > /etc/systemd/system/MTProxy.service <<-EOF
 [Unit]
 Description=MTProxy
 After=network.target
@@ -42,9 +48,8 @@ EOF
 	systemctl enable MTProxy.service
 	systemctl restart MTProxy.service
 
-	echo "Usage: tg://proxy?server=$(get_ip)&port=${random_port}&secret=${secret}" | tee $HOME/mtproxy.txt
+	return 0
 }
-
 
 # 输出安装后的信息
 print_info() {
@@ -66,8 +71,8 @@ clean() {
 	return 0
 
 }
-# 下载编译安装
-install_mtproxy() {
+# 准备编译编译安装
+pre_install() {
     # Install dependence and make it
     clear
     apt update \
@@ -86,13 +91,36 @@ install_mtproxy() {
 }
 
 
-# 入口程序
-main() {
-	install_mtproxy \
+# 安装程序
+install_mtproxy() {
+	pre_install \
 	&& get_config \
+	&& enable_mtproxy \
 	&& print_info \
 	&& clean
 
 }
 
-main
+# 卸载mtproxy 这里应该检查是否安装mrpoxy，尚未实现
+uninstall_mrproxy() {
+	systemctl stop MTProxy.service &>/dev/null \
+	&& systemctl disable MTProxy.service &> /dev/null
+	rm -rf /usr/local/MTProxy
+	rm -f $HOME/mtproxy.txt
+	echo "Uninstall mtproxy successfuly."
+}
+
+
+
+# 入口
+action=$1
+[ -z $1 ] && action='install'
+case "$action" in
+	install|uninstall)
+		$action_mtproxy
+		;;
+	*)
+		echo "Arguements error! [${action}]"
+		echo "Usage: $(basename $0) [install|uninstall]"
+		;;
+esac
