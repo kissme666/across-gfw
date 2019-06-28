@@ -86,17 +86,17 @@ EOF
 	return 0
 }
 
-main() {
+install_sslibev() {
 	clear
 	check_root
 	cd $HOME
-	if [[ -d ${CUR_DIR}/docker ]]; then
-		echo "[ ${YELLOW}Warning{PLAIN}] $HOME/docker is exists"
+	if [[ -d $HOME/docker ]]; then
+		echo "[ ${YELLOW}Warning${PLAIN}] $HOME/docker is exists"
 	else
-		mkdir -p ${CUR_DIR}/docker/ss-libev
+		mkdir -p $HOME/docker/ss-libev
 	fi
 	
-	cd ${CUR_DIR}/docker/ss-libev
+	cd $HOME/docker/ss-libev
 	if [[ $? -eq 0 ]]; then
 		check_docker || install_docker	
 	else
@@ -118,5 +118,25 @@ main() {
 
 }
 
-main
+uninstall_sslibev() {
+	cd $HOME/docker/ss-libev/
+	docker-compose stop
+	docker-compose rm
+	rm -rf $HOME/docker/ss-libev
+
+	return 0
+}
+
+# 入口
+action=$1
+[ -z $1 ] && action='install'
+case "$action" in
+	install|uninstall)
+		${action}_sslibev
+		;;
+	*)
+		echo "Arguements error! [${action}]"
+		echo "Usage: $(basename $0) [install|uninstall]"
+		;;
+esac
 
