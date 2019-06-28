@@ -65,12 +65,12 @@ get_config() {
 	echo "Please chose your Password"
 	read -p "(Default password: admin) " passwd
 	echo "Please chose your port"
-	read -p "(Default password: 8388) " port
+	read -p "(Default password: random) " port
 
 	if [[ -z ${passwd} ]]; then
 		passwd="admin"
 	elif [[ -z ${port} ]]; then
-		port="8388"
+		port="$(shuf -i 1024-65535 -n 1)"
 	fi
 
 	cat > docker-compose.yaml <<-EOF
@@ -108,10 +108,10 @@ main() {
 		docker-compose up -d
 
 		clear
-		echo -e "Your server ip 			: ${GREEN} $(get_ip) ${PLAIN}"		
-		echo -e "Your port 					: ${GREEN} ${port} ${PLAIN}"
-		echo -e "Your encryption method 	: ${GREEN} aes-256-gcm ${PLAIN}"
-		echo -e "Your password              : ${GREEN} $passwd$ {PLAIN}"
+		echo -e "Your server ip             : ${GREEN} $(get_ip) ${PLAIN}"		
+		echo -e "Your port                  : ${GREEN} ${port} ${PLAIN}"
+		echo -e "Your encryption method     : ${GREEN} aes-256-gcm ${PLAIN}"
+		echo -e "Your password              : ${GREEN} $passwd ${PLAIN}"
 		echo 
 	fi
 
