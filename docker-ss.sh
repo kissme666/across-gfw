@@ -4,7 +4,39 @@
 # OS: Ubuntu18.04
 # 2019.4.27 first commint
 # 2019.5.22 Redesign
-current_dir=$(pwd)
+
+# Color setings     # Meaning
+RED='\033[0;31m'    # RED: error
+GREEN='\033[0;32m'  # GREEN: success
+YELLOW='\033[0;33m' # YELLOW: warning
+PLAIN='\033[0m' 	# PLAIN: reset color
+
+
+CUR_DIR=$(pwd)
+
+# get ip address
+get_ip() {
+	ipaddr=$(curl -sS ifconfig.me)
+
+	echo ${ipaddr}
+}
+
+
+# check root
+check_root() {
+	[[ $EUID -ne 0 ]] && echo -e "[${RED}Error${PLAIN}] This script must be run as root!" && exit 1
+}
+
+# check docker
+# 1 installed 0 Not Installed
+check_docker() {
+	if [[ `command -v docker` -eq 0 ]]; then
+		echo -e "[ ${YELLOW}Warning${PLAIN} ] Docker has been installed"
+		return 1
+	elif [[ `command -v docker` -ne 0 ]]; then
+		return 0
+	fi
+}
 
 # install docker on vps
 install_docker() {
@@ -30,8 +62,16 @@ install_docker() {
 # get docker-compose configurition
 get_config() {
 	clear
-	read -p "Chose your passwd: " passwd
-	read -p "chose your port: " port
+	echo "Please chose your Password"
+	read -p "(Default password: admin) " passwd
+	echo "Please chose your port"
+	read -p "(Default password: 8388) " port
+
+	if [[ -z ${passwd} ]]; then
+		passwd="admin"
+	elif [[ -z ${port} ]]; then
+		port="8388"
+	fi
 
 	cat > docker-compose.yaml <<-EOF
 shadowsocks:
@@ -47,28 +87,32 @@ EOF
 }
 
 main() {
-	mkdir -p $current_dir/docker/ss-libev && \
-	cd $current_dir/docker/ss-libev/
-	install_docker
-	if [ $? -eq 0 ]; then
-		get_config
-		if [ $? -eq 0 ]; then
-			# Docker services start and install ss-libev for docker
-			docker-compose up -d
-
-			clear
-			echo "--------------------------"
-			echo "----docker-ss installed---"
-			echo "Port: $port"
-			echo "Method: aes-256-gcm"
-			echo "Password: $passwd"
-			echo "Enjoy it"
-			echo "--------------------------"
-
-		fi
+	clear
+	check_root
+	cd $HOME
+	if [[ -d ${CUR_DIR}/docker ]]; then
+		echo "[ ${YELLOW}Warning{PLAIN}] $HOME/docker is exists"
 	else
-		echo "Warning: ss-libev unsuccessful installation"
+		mkdir -p ${CUR_DIR}/docker/ss-libev
+	fi
+	
+	cd ${CUR_DIR}/docker/ss-libev
+	if [[ $? -eq 0 ]]; then
+		install_docker
+	else
+		echo -e "[ ${RED}Error${PLAIN} ] Failed to create folder"
 		exit 1
+	fi
+	get_config
+	if [[ $? -eq 0 ]]; then
+		docker-compose up -d
+
+		clear
+		echo -e "Your server ip 			: ${GREEN} $(get_ip) ${PLAIN}"		
+		echo -e "Your port 					: ${GREEN} ${port} ${PLAIN}"
+		echo -e "Your encryption method 	: ${GREEN} aes-256-gcm ${PLAIN}"
+		echo -e "Your password              : ${GREEN} $passwd$ {PLAIN}"
+		echo 
 	fi
 
 
