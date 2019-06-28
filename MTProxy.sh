@@ -7,7 +7,7 @@
 # 
 
 # debug
-set -x 
+# set -x 
 
 
 current_dir=$(pwd)
