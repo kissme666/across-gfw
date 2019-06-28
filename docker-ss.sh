@@ -90,8 +90,8 @@ install_sslibev() {
 	clear
 	check_root
 	cd $HOME
-	if [[ -d $HOME/docker ]]; then
-		echo "[ ${YELLOW}Warning${PLAIN}] $HOME/docker is exists"
+	if [[ -d $HOME/docker/ss-libev ]]; then
+		echo -e "[ ${YELLOW}Warning${PLAIN}] $HOME/docker is exists"
 	else
 		mkdir -p $HOME/docker/ss-libev
 	fi
