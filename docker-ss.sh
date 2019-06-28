@@ -28,13 +28,13 @@ check_root() {
 }
 
 # check docker
-# 1 installed 0 Not Installed
+# 0 installed 1 Not Installed
 check_docker() {
 	if [[ `command -v docker` -eq 0 ]]; then
 		echo -e "[ ${YELLOW}Warning${PLAIN} ] Docker has been installed"
-		return 1
-	elif [[ `command -v docker` -ne 0 ]]; then
 		return 0
+	elif [[ `command -v docker` -ne 0 ]]; then
+		return 1
 	fi
 }
 
@@ -98,7 +98,7 @@ main() {
 	
 	cd ${CUR_DIR}/docker/ss-libev
 	if [[ $? -eq 0 ]]; then
-		install_docker
+		check_docker || install_docker	
 	else
 		echo -e "[ ${RED}Error${PLAIN} ] Failed to create folder"
 		exit 1
