@@ -8,7 +8,8 @@ wget https://raw.githubusercontent.com/kissme666/across-gfw/master/docker-ss.sh 
 ```
 
 ## MTProxy 自动安装脚本
-~~注意：此脚本用的mtproxy代理已经被识别，一定时间内会封vps端口，目前正在解决此问题~~
+~~注意：此脚本用的mtproxy代理已经被识别，一定时间内会封vps端口，目前正在解决此问题~~    
+
 **目前使用mtg一个俄罗斯人写的mtproxy的分支，可以直接使用作者的脚本部署，注意更换端口**
 
 [Github链接](https://github.com/9seconds/mtg)
