@@ -4,7 +4,7 @@
 # Auto install MTProxy shell scripts
 # OS: Ubuntu18.04 / Debian 9.x
 # Version: 0.2
-# 
+# 原版协议已被识别，暂时放弃等更新
 
 # debug
 # set -x 
