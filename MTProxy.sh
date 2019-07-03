@@ -53,13 +53,13 @@ EOF
 
 # 输出安装后的信息
 print_info() {
-		clear
-		echo 
-		echo -e " MTProxy IS INSTALLED               				  "
-		echo -e " Your password and port in $HOME/mtproxy.txt		  "
-		echo -e " $(cat $HOME/mtproxy.txt )              			  "
-		echo 
-		echo 
+	clear
+	echo 
+	echo -e " MTProxy IS INSTALLED                                "
+	echo -e " Your password and port in $HOME/mtproxy.txt         "
+	echo -e " $(cat $HOME/mtproxy.txt )                           "
+	echo 
+	echo 
 
 		return 0
 }
@@ -77,17 +77,17 @@ pre_install() {
     clear
     apt update \
     && apt install -y git curl build-essential libssl-dev zlib1g-dev \
-	&& git clone https://github.com/TelegramMessenger/MTProxy \
+    && git clone https://github.com/TelegramMessenger/MTProxy \
     && cd $current_dir/MTProxy || exit 1 \
     && make \
     && cd $current_dir/MTProxy/objs/bin || exit 1 \
     && mkdir -p /usr/local/MTProxy/ \
     && cp ./mtproto-proxy /usr/local/MTProxy/ \
-	&& cd /usr/local/MTProxy/ \
-	&& curl -s https://core.telegram.org/getProxySecret -o proxy-secret \
-	&& curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
+    && cd /usr/local/MTProxy/ \
+    && curl -s https://core.telegram.org/getProxySecret -o proxy-secret \
+    && curl -s https://core.telegram.org/getProxyConfig -o proxy-multi.conf
 
-	return 0
+    return 0
 }
 
 
